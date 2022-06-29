@@ -19,6 +19,7 @@ let storage = multer.diskStorage({
 		let extension = extArray[extArray.length - 1];
 		cb(null, `${Date.now()}.${extension}`);
 	},
+	fieldSize: 500 * 1024 * 1024,
 });
 
 const upload = multer({ storage });
@@ -36,7 +37,6 @@ const viewPaths = {
 	index: path.join(`${__dirname}/storage/views/index.ejs`),
 	password: path.join(`${__dirname}/storage/views/password.ejs`),
 };
-
 
 app.get('/', (req, res) => {
 	res.render(viewPaths.index);
