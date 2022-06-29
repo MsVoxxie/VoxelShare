@@ -1,0 +1,6 @@
+{
+	"name": "FileShare",
+	"script": "src/server.js",
+	"watch": "src/server.js",
+	"ignore_watch": ["src/fileStorage"]
+}
