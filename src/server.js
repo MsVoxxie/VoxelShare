@@ -9,21 +9,6 @@ require('dotenv').config();
 const fs = require('fs');
 const app = express();
 
-//Setup Multer
-let storage = multer.diskStorage({
-	destination: function (req, file, cb) {
-		cb(null, `${__dirname}/fileStorage/`);
-	},
-	filename: function (req, file, cb) {
-		let extArray = file.mimetype.split('/');
-		let extension = extArray[extArray.length - 1];
-		cb(null, `${Date.now()}.${extension}`);
-	},
-	fieldSize: 500 * 1024 * 1024,
-});
-
-const upload = multer({ storage });
-
 //Setup MongoDB
 mongoose.connect(process.env.DATABASE_URL);
 
@@ -42,21 +27,44 @@ app.get('/', (req, res) => {
 	res.render(viewPaths.index);
 });
 
-app.post('/upload', upload.single('file'), async (req, res) => {
-	const fileData = {
-		url: `${req.headers.origin}/${req.file.filename}`,
-		path: req.file.path,
-		originalName: req.file.originalname,
-		fileType: `.${req.file.mimetype.split('/')[1]}`,
-		size: req.file.size,
-	};
+app.post('/upload', async (req, res) => {
+	//Setup Multer
+	let storage = multer.diskStorage({
+		destination: function (req, file, cb) {
+			cb(null, `${__dirname}/fileStorage/`);
+		},
+		filename: function (req, file, cb) {
+			let extArray = file.originalname.split('.');
+			let extension = extArray[extArray.length - 1];
+			cb(null, `${Date.now()}.${extension}`);
+		},
+		fieldSize: 500 * 1024 * 1024,
+	});
 
-	if (req.body.password != null && req.body.password !== '') {
-		fileData.password = await bcrypt.hash(req.body.password, 10);
-	}
+	//Define Upload
+	const upload = multer({ storage });
 
-	const file = await File.create(fileData);
-	res.render(viewPaths.index, { fileLink: file.id, fileUrl: file.url, secure: file.password ? true : false });
+	//Upload File
+	upload.single('file')(req, res, async (err) => {
+		if (err) {
+			return res.send('Error uploading file.');
+		}
+
+		const fileData = {
+			url: `${req.headers.origin}/${req.file.filename}`,
+			path: req.file.path,
+			originalName: req.file.originalname,
+			fileType: `.${req.file.mimetype.split('/')[1]}`,
+			size: req.file.size,
+		};
+
+		if (req.body.password != null && req.body.password !== '') {
+			fileData.password = await bcrypt.hash(req.body.password, 10);
+		}
+
+		const file = await File.create(fileData);
+		res.render(viewPaths.index, { fileLink: file.id, fileUrl: file.url, secure: file.password ? true : false });
+	});
 });
 
 app.route('/:id').get(handleDownload).post(handleDownload);
