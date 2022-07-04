@@ -1,0 +1,102 @@
+html,
+body {
+	height: 100%;
+	color: white;
+	font-weight: 300;
+	font-size: large;
+	font-style: bold;
+	font-family: 'Roboto', sans-serif;
+	background-color: #1a202c;
+	transition: 0.3s ease-in-out;
+}
+.main {
+	height: 100%;
+	width: 100%;
+	display: table;
+}
+.wrapper {
+	display: table-cell;
+	vertical-align: middle;
+	justify-content: center;
+	text-align: center;
+	height: 100%;
+}
+
+.header {
+	font-weight: bolder;
+	padding: auto;
+}
+
+.box {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	margin: auto;
+	min-width: 256px;
+	max-width: 500px;
+	min-height: 256px;
+	background-color: #2d3748;
+	border-radius: 20px;
+	transition: 0.3s ease-in-out;
+}
+
+.inputs {
+	display: grid;
+	gap: 0.5rem;
+	max-width: 500px;
+	margin: 0 auto;
+	text-align: center;
+	justify-content: center;
+	align-items: center;
+	font-style: bold;
+	font-size: medium;
+	font-family: 'Roboto', sans-serif;
+	transition: 0.3s ease-in-out;
+}
+
+button {
+	display: block;
+	border-radius: 10px;
+	grid-column: span 2;
+	padding: 0.2rem;
+	margin-top: 0.5rem;
+	width: 100%;
+	font-size: larger;
+	font-style: bold;
+	font-family: 'Roboto', sans-serif;
+	transition: 0.3s ease-in-out;
+}
+
+button:hover {
+	background-color: #e5e5e5;
+	border-radius: 5px;
+	transition: 0.3s ease-in-out;
+}
+
+input {
+	border-radius: 10px;
+}
+
+input[type='encryption']:focus {
+	border-radius: 5px;
+	border: none;
+	outline-width: 0;
+	transition: 0.3s ease-in-out;
+}
+
+.output {
+	margin-bottom: 1rem;
+	margin-top: 1rem;
+	text-align: center;
+}
+
+a:link {
+	color: white;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}

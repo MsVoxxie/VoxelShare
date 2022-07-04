@@ -4,8 +4,10 @@ const axios = require('axios');
 
 //Success
 async function sendSuccessWebHook(req) {
+	//Quick definitions
 	let IP = req.headers['x-forwarded-for'] || req.socket.remoteAddress || null;
 	IP = IP.split(',')[1];
+
 	let encrypted = req.body.password != null && req.body.password !== '' ? 'Encrypted' : 'Direct';
 	//An array of Discord Embeds.
 	let embeds = [
@@ -60,7 +62,9 @@ async function sendFailedWebHook(req) {
 			fields: [
 				{
 					name: `${req.file.originalname.toString()}`,
-					value: `**File Size›** \`${formatBytes(req.file.size)}\`\n**File Type›** \`${req.file.originalname.split('.')[1]}\`\n**File Encryption›** \`${encrypted}\`\n**Uploaded By›** ||${IP}||\n**File Link›** ||${req.headers.origin}/${req.file.filename}||`,
+					value: `**File Size›** \`${formatBytes(req.file.size)}\`\n**File Type›** \`${req.file.originalname.split('.')[1]}\`\n**File Encryption›** \`${encrypted}\`\n**Uploaded By›** ||${IP}||\n**File Link›** ||${
+						req.headers.origin
+					}/${req.file.filename}||`,
 				},
 			],
 			footer: {

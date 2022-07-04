@@ -4,16 +4,16 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>Document</title>
+		<title>VoxelShare</title>
 	</head>
 	<body>
 		<form method="post" style="display: grid; gap: 0.5rem; grid-template-columns: auto 1fr; max-width: 500px; margin: 0 auto">
-			<label for="password">Password:</label>
-			<input type="password" id="password" name="password" />
+			<label for="encryption">Encryption Key› </label>
+			<input type="encryption" id="encryption" name="encryption" />
 			<button style="grid-column: span 2" type="submit">Download</button>
 		</form>
 		<% if (locals.error) { %>
-		<div style="color: red; margin-bottom: 1rem; margin-top: 1rem; text-align: center">Incorrect Password</div>
+		<div style="color: red; margin-bottom: 1rem; margin-top: 1rem; text-align: center">Incorrect Key</div>
 		<% } %>
 	</body>
 </html>

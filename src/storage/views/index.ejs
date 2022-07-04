@@ -4,28 +4,47 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>Document</title>
+		<link rel="stylesheet" href="../../css/style-sheet.css" />
+		<title>VoxelShare</title>
+		<style>
+			@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap');
+		</style>
 	</head>
 	<body>
-		<form action="/upload" method="post" style="display: grid; gap: 0.5rem; grid-template-columns: auto 1fr; max-width: 500px; margin: 0 auto" enctype="multipart/form-data">
-			<label for="file">File:</label>
-			<input type="file" id="file" name="file" required />
-			<label for="password">Password:</label>
-			<input type="password" id="password" name="password" />
-			<button style="grid-column: span 2" type="submit">Share</button>
-		</form>
-		<% if (locals.fileLink != null) { %>
-		<div style="margin-bottom: 1rem; margin-top: 1rem; text-align: center">
-			Your file was Uploaded successfully.
-			<br />
-			Download Link
-			<a href="<%= locals.fileLink %>"><%= locals.fileLink %></a>
-			<% if( !locals.secure && locals.fileUrl != null) { %>
-			<br />
-			Direct Link
-			<a href="<%= locals.fileUrl %>"><%= locals.fileUrl %></a>
-			<% } %>
+		<div class="main">
+			<div class="wrapper">
+				<h1>Welcome To VoxelShare</h1>
+				<h2>Please Select A File</h2>
+				<div class="box">
+					<div class="inputs">
+						<form action="/upload" method="post" enctype="multipart/form-data">
+							<div class="fileDiv">
+								<label for="file">File› </label>
+								<input type="file" id="file" name="file" required />
+							</div>
+							<div class="encryptionDiv">
+								<label type="encryption" for="encryption">Encryption Code› </label>
+								<input type="encryption" id="encryption" name="encryption" placeholder="Optional Key" />
+								<button type="submit">Upload</button>
+							</div>
+						</form>
+					</div>
+
+					<% if (locals.fileLink != null) { %>
+					<div class="output">
+						<b>Your file was Uploaded successfully!</b>
+						<br />
+						<b>Download Link›</b>
+						<a href="<%= locals.fileLink %>"><%= locals.fileLink %></a>
+						<% if( !locals.secure && locals.fileUrl != null) { %>
+						<br />
+						<b>Direct Link›</b>
+						<a href="<%= locals.fileUrl %>"><%= locals.fileUrl %></a>
+						<% } %>
+					</div>
+					<% } %>
+				</div>
+			</div>
 		</div>
-		<% } %>
 	</body>
 </html>

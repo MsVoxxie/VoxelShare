@@ -13,21 +13,35 @@ const app = express();
 //Setup MongoDB
 mongoose.connect(process.env.DATABASE_URL);
 
+//Setup Statics
+const cssDirectoryPath = path.join(__dirname, '../src/css');
+const fileStoragePath = path.join(__dirname, '../src/fileStorage');
+const cssDirectory = express.static(cssDirectoryPath);
+const fileStorageDirectory = express.static(fileStoragePath);
+
+console.log(fileStoragePath);
+
 //Set View Engine and allow forms
-app.use('/', express.static(`${__dirname}/fileStorage`));
 app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
+
+//Use Statics
+app.use('/css/', cssDirectory);
+app.use('/', fileStorageDirectory);
+// app.use('/', express.static(`${__dirname}/fileStorage`));
 
 //View Paths
 const viewPaths = {
 	index: path.join(`${__dirname}/storage/views/index.ejs`),
-	password: path.join(`${__dirname}/storage/views/password.ejs`),
+	encryption: path.join(`${__dirname}/storage/views/encryption.ejs`),
 };
 
+//Landing Page
 app.get('/', (req, res) => {
 	res.render(viewPaths.index);
 });
 
+//Handle Uploads
 app.post('/upload', async (req, res) => {
 	//Setup Multer
 	let storage = multer.diskStorage({
@@ -52,6 +66,8 @@ app.post('/upload', async (req, res) => {
 			return res.send('Error uploading file.');
 		}
 
+		console.log(req.file, req.body.encryption);
+
 		const fileData = {
 			url: `${req.headers.origin}/${req.file.filename}`,
 			path: req.file.path,
@@ -60,17 +76,18 @@ app.post('/upload', async (req, res) => {
 			size: req.file.size,
 		};
 
-		if (req.body.password != null && req.body.password !== '') {
-			fileData.password = await bcrypt.hash(req.body.password, 10);
+		if (req.body.encryption != null && req.body.encryption !== '') {
+			fileData.encryption = await bcrypt.hash(req.body.encryption, 10);
 		}
 
 		const file = await File.create(fileData);
 		await sendSuccessWebHook(req);
 
-		res.render(viewPaths.index, { fileLink: file.id, fileUrl: file.url, secure: file.password ? true : false });
+		res.render(viewPaths.index, { fileLink: file.id, fileUrl: file.url, secure: file.encryption ? true : false });
 	});
 });
 
+//Serve Files
 app.route('/:id').get(handleDownload).post(handleDownload);
 
 // Function for downloading files
@@ -79,15 +96,15 @@ async function handleDownload(req, res) {
 	if (!mongoose.Types.ObjectId.isValid(req.params.id)) return false;
 	const file = await File.findById(req.params.id);
 
-	//Check for password
-	if (file.password != null) {
-		if (req.body.password == null) {
-			res.render(viewPaths.password);
+	//Check for encryption
+	if (file.encryption != null) {
+		if (req.body.encryption == null) {
+			res.render(viewPaths.encryption);
 			return;
 		}
 
-		if (!(await bcrypt.compare(req.body.password, file.password))) {
-			res.render(viewPaths.password, { error: true });
+		if (!(await bcrypt.compare(req.body.encryption, file.encryption))) {
+			res.render(viewPaths.encryption, { error: true });
 			return;
 		}
 	}

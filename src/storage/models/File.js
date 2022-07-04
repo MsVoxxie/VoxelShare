@@ -23,7 +23,7 @@ const File = new mongoose.Schema({
 		default: 0,
 		required: true,
 	},
-	password: String,
+	encryption: String,
 });
 
 module.exports = mongoose.model('File', File);
