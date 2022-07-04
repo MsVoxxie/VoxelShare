@@ -1,3 +1,4 @@
+const { sendSuccessWebHook, sendFailedWebHook } = require('./storage/funcs/index.js');
 const File = require('./storage/models/File');
 const mongoose = require('mongoose');
 const express = require('express');
@@ -47,6 +48,7 @@ app.post('/upload', async (req, res) => {
 	//Upload File
 	upload.single('file')(req, res, async (err) => {
 		if (err) {
+			sendFailedWebHook(req);
 			return res.send('Error uploading file.');
 		}
 
@@ -63,6 +65,8 @@ app.post('/upload', async (req, res) => {
 		}
 
 		const file = await File.create(fileData);
+		await sendSuccessWebHook(req);
+
 		res.render(viewPaths.index, { fileLink: file.id, fileUrl: file.url, secure: file.password ? true : false });
 	});
 });
